@@ -1,0 +1,8 @@
+uniform samplerCube u_Skybox;
+
+varying vec3 ex_TexCoords;
+
+void main()
+{
+ gl_FragColor = texture(u_Skybox, ex_TexCoords);
+}

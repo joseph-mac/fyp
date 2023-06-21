@@ -1,0 +1,162 @@
+#version 410
+#define MAX_LIGHT_COUNT 5
+
+uniform sampler2D u_Texture;
+uniform sampler2D u_MaterialMap;
+
+uniform sampler2D u_ShadowMaps[MAX_LIGHT_COUNT];
+
+uniform int u_LightCount;
+uniform int u_LightTypes[MAX_LIGHT_COUNT];
+uniform vec3 u_LightPositions[MAX_LIGHT_COUNT];
+uniform vec3 u_LightForwards[MAX_LIGHT_COUNT];
+uniform vec3 u_LightColours[MAX_LIGHT_COUNT];
+uniform vec3 u_LightDistances[MAX_LIGHT_COUNT];
+
+uniform mat4 u_View;
+
+varying vec2 ex_TexCoords;
+varying vec3 ex_Normal;
+varying vec3 ex_FragPos;
+varying vec4 ex_LightSpaceFragPos[MAX_LIGHT_COUNT];
+
+float GetOrthoShadow(vec4 _lightSpaceFragPos, int _mapID)
+{
+  vec3 projCoords = _lightSpaceFragPos.xyz / _lightSpaceFragPos.w;
+ 
+  projCoords = projCoords * 0.5 + 0.5;
+
+  float closestDepth = texture(u_ShadowMaps[_mapID], projCoords.xy).z;
+  float currentDepth = projCoords.z;
+  if (currentDepth <= 0.05 || currentDepth >= 1.0)
+  {
+   return 0.0;
+  }
+
+  float shadow = currentDepth - 0.005 > closestDepth ? 1.0 : 0.0;
+  return shadow;
+}
+
+float GetPerspShadow(vec4 _lightSpaceFragPos, int _mapID)
+{
+  vec3 projCoords = _lightSpaceFragPos.xyz / _lightSpaceFragPos.w;
+  //projCoords = projCoords * 0.5 + 0.5;
+  projCoords = (projCoords + 1.0) / 2.0;
+
+  if (projCoords.x > 1.0 || projCoords.x < 0.0 || projCoords.y > 1.0 || projCoords.y < 0.0 || projCoords.z > 1.0 || projCoords.z < 0.0)
+  {
+    return 1.0;
+  }
+  
+  float closestDepth = (texture(u_ShadowMaps[_mapID], projCoords.xy).y + 1.0) / 2.0;
+  //closestDepth = 2.0 * closestDepth - 1.0;
+  //closestDepth = 2.0 * 0.1 * 100.0 / (100.0 + 0.1 - closestDepth * (100.0 - 0.1));
+  float currentDepth = projCoords.z;//(projCoords.z + 1.0) / 2.0;
+  
+  if (projCoords.z < 0)
+  {
+    return 1.0;
+  }
+  if (projCoords.z > 1.0)
+  {
+    return 1.0;
+  }
+  
+  //return 1.0 - closestDepth;
+  //return currentDepth;
+  //return 0.0;
+  
+  float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+  return shadow;
+}
+
+
+void main()
+{
+ vec3 norm = normalize(ex_Normal);
+ int lightType;
+ vec3 lightPos;
+ vec3 lightColour = vec3(1, 1, 1);
+ vec3 lightDistances;
+ 
+ float ambientStrength = 0.1;
+ vec3 ambientLight = ambientStrength * lightColour;
+ 
+ vec4 material = texture(u_MaterialMap, ex_TexCoords);
+ vec3 totalLight = vec3(0, 0, 0);
+ float totalShadow = 0.0;
+
+ for(int i = 0; i < u_LightCount; i++)
+ {
+  lightType = u_LightTypes[i];
+  lightPos = u_LightPositions[i];
+  lightColour = u_LightColours[i];
+  lightDistances = u_LightDistances[i];
+
+  if (lightType == 0) // SUN TYPE
+  {
+   vec3 lightDir = -u_LightForwards[i];
+   float diff = max(dot(norm, lightDir), 0);
+   //float dist = length(lightPos - ex_FragPos);
+   //float distVal = 1.0 / (lightDistances.x + lightDistances.y * dist + lightDistances.z * (dist * dist));
+   vec3 diffuseLight = lightColour * diff;
+
+   vec3 viewPos = vec3(inverse(u_View) * vec4(0, 0, 0, 1));
+   vec3 viewDir = normalize(viewPos - ex_FragPos);
+   vec3 reflectDir = reflect(-lightDir, norm);
+   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+   vec3 specularLight = lightColour * spec * material.x;
+
+   float shadow = GetOrthoShadow(ex_LightSpaceFragPos[i], i);
+  
+   totalLight = totalLight + ((diffuseLight + specularLight) * (1.0 - (0.2 * shadow)));
+  }
+  else if (lightType == 1) // ORB TYPE
+  {
+   vec3 lightDir = normalize(lightPos - ex_FragPos);
+   float diff = max(dot(norm, lightDir), 0);
+   float dist = length(lightPos - ex_FragPos);
+   float distVal = 1.0 / (lightDistances.x + lightDistances.y * dist + lightDistances.z * (dist * dist));
+   vec3 diffuseLight = lightColour * diff * distVal;
+
+   vec3 viewPos = vec3(inverse(u_View) * vec4(0, 0, 0, 1));
+   vec3 viewDir = normalize(viewPos - ex_FragPos);
+   vec3 reflectDir = reflect(-lightDir, norm);
+   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+   vec3 specularLight = lightColour * spec * distVal;
+
+   //float shadow = GetShadow(ex_LightSpaceFragPos[i], i);
+   //if (shadow < 0.5) { totalLight += ((diffuseLight + specularLight)); }
+   //else { totalLight -= ((diffuseLight + specularLight)); }
+  
+   totalLight = totalLight + diffuseLight + specularLight;
+   //if (diffuseLight.x + specularLight.x > 0.1)
+   //{
+   // totalShadow = totalShadow / dist;//totalShadow * (1.0 - (diffuseLight.x + specularLight.x) * 2);
+   //}
+   //totalLight = vec3(1.0-shadow);
+  }
+  else if (lightType == 2) // SPOT TYPE
+  {
+   vec3 lightDir = -u_LightForwards[i];
+   float diff = max(dot(norm, lightDir), 0);
+   //float dist = length(lightPos - ex_FragPos);
+   //float distVal = 1.0 / (lightDistances.x + lightDistances.y * dist + lightDistances.z * (dist * dist));
+   vec3 diffuseLight = lightColour * diff;
+
+   vec3 viewPos = vec3(inverse(u_View) * vec4(0, 0, 0, 1));
+   vec3 viewDir = normalize(viewPos - ex_FragPos);
+   vec3 reflectDir = reflect(-lightDir, norm);
+   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+   vec3 specularLight = lightColour * spec * material.x;
+
+   float shadow = GetPerspShadow(ex_LightSpaceFragPos[i], i);
+  
+   totalLight = totalLight + lightColour * (1.0 - shadow);//= totalLight + ((diffuseLight + specularLight) * (1.0 - (0.2 * shadow)));
+  }
+ }
+
+ totalLight += ambientLight;
+ vec4 texture = texture2D(u_Texture, ex_TexCoords);
+ gl_FragColor = vec4(totalLight, 1.0) * texture;
+}

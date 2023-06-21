@@ -1,0 +1,19 @@
+# input bindings file
+
+# Each input is defined as below:
+# InputDeviceType, InputType, int inputCode, float innerDeadzone, float outerDeadzone, bool passThroughRaw, float sensitivity, bool toggleMode, float maxValue
+
+# OnScreenButton-type inputs are defined as above, plus the following:
+# string name, string iconPath, int xPos, int yPos, int width, int height, int xAnchor, int yAnchor, bool hoverMode, float hoverModeDwellTime
+# valid anchor values are 0, 1, or 2, representing LEFT/BOTTOM, CENTRE/MIDDLE, RIGHT/TOP respectively.
+
+# Inputs are separated with an asterisk *
+
+# IN_MAIN_MENU
+UI_SELECT | IN_MAIN_MENU | Inputs | Keyboard, KeyboardKey, SPACE, 0.1, 0.1, true, 1, false, 1 * Keyboard, KeyboardKey, RETURN, 0.1, 0.1, true, 1, false, 1
+
+# IN_GAME
+SHIP_LEFT | IN_GAME | Inputs | Keyboard, KeyboardKey, a, 0.1, 0.1, true, 1, false, 1 * Keyboard, KeyboardKey, LEFTARROW, 0.1, 0.1, true, 1, false, 1 * AllControllers, Axis, LEFTX_NEG, 0.1, 0.1, true, 1, false, 1 * Mouse, OnScreenButton, 0, 0.1, 0.1, true, 1, false, 1, "LEFT", ../../data/textures/icons/left.png, -110, 20, 100, 100, 1, 0, true, 0.3 * Mouse, OnScreenButton, 0, 0.1, 0.1, true, 1, false, 0.5, "SLOW L", ../../data/textures/icons/left.png, -220, 20, 100, 100, 1, 0, true, 0
+SHIP_RIGHT | IN_GAME | Inputs | Keyboard, KeyboardKey, d, 0.1, 0.1, true, 1, false, 1 * Keyboard, KeyboardKey, RIGHTARROW, 0.1, 0.1, true, 1, false, 1 * AllControllers, Axis, LEFTX, 0.1, 0.1, true, 1, false, 1 * Mouse, OnScreenButton, 0, 0.1, 0.1, true, 1, false, 1, "RIGHT", ../../data/textures/icons/right.png, 110, 20, 100, 100, 1, 0, true, 0.3 * Mouse, OnScreenButton, 0, 0.1, 0.1, true, 1, false, 0.5, "SLOW R", ../../data/textures/icons/right.png, 220, 20, 100, 100, 1, 0, true, 0
+SHIP_FIRE | IN_GAME | Inputs | Keyboard, KeyboardKey, SPACE, 0.1, 0.1, true, 1, false, 1 * Keyboard, KeyboardKey, UPARROW, 0.1, 0.1, true, 1, true, 1 * AllControllers, ControllerButton, SOUTH, 0.1, 0.1, true, 1, false, 1 * AllControllers, ControllerTrigger, TRIGGERRIGHT, 0.1, 0.1, true, 1, false, 1 * Mouse, OnScreenButton, 0, 0.1, 0.1, true, 1, false, 1, "FIRE", ../../data/textures/icons/ship_fire.png, 0, 70, 100, 100, 1, 0, false, 0 * Mouse, OnScreenButton, 0, 0.1, 0.1, true, 1, true, 1, "FIRE T", ../../data/textures/icons/ship_fire.png, 0, 190, 100, 100, 1, 0, true, 1
+EXIT_TO_MENU | IN_GAME | Inputs | Keyboard, KeyboardKey, ESCAPE, 0.1, 0.1, true, 1, false, 1 * Mouse, OnScreenButton, 0, 0.1, 0.1, true, 1, false, 1, "MENU", ../../data/textures/icons/pause.png, 0, -20, 100, 100, 1, 2, false, 0 * AllControllers, ControllerButton, NORTH, 0.1, 0.1, true, 1, false, 1

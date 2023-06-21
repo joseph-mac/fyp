@@ -1,0 +1,24 @@
+uniform sampler2D u_Texture;
+uniform vec3 u_Colour;
+uniform vec4 u_BackColour;
+
+varying vec2 ex_TexCoords;
+
+void main()
+{
+ vec4 outputColour;
+ if (ex_TexCoords.x < 0)
+ {
+  outputColour = u_BackColour;
+ }
+ else
+ {
+  outputColour = texture2D(u_Texture, ex_TexCoords) * vec4(u_Colour, 1);
+  //if (outputColour.w < 0.6)
+  //{
+  // outputColour = vec4(0, 0, 0, 0);
+  //}
+ }
+ 
+ gl_FragColor = outputColour;
+}

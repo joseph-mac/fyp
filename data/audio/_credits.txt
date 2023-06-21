@@ -1,0 +1,16 @@
+# Audio Credits
+
+enemyBang.ogg:
+  https://freesound.org/people/Prof.Mudkip/sounds/386862/
+
+playerHit.ogg:
+  https://freesound.org/people/Metzik/sounds/459782/
+
+fleetHit.ogg:
+  https://freesound.org/people/klankbeeld/sounds/396940/
+
+shoot.ogg:
+  https://freesound.org/people/MATRIXXX_/sounds/414888/
+
+playerBang.ogg:
+  https://freesound.org/people/n_audioman/sounds/276338/

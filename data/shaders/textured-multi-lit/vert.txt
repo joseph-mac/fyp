@@ -1,0 +1,27 @@
+#version 410
+#define MAX_LIGHT_COUNT 5
+
+attribute vec3 in_Position;
+attribute vec2 in_TexCoords;
+attribute vec3 in_Normal;
+
+uniform int u_LightCount;
+uniform vec3 u_LightPositions[MAX_LIGHT_COUNT];
+uniform vec3 u_LightColours[MAX_LIGHT_COUNT];
+uniform vec3 u_LightDistances[MAX_LIGHT_COUNT];
+
+uniform mat4 u_Projection;
+uniform mat4 u_View;
+uniform mat4 u_Model;
+
+varying vec2 ex_TexCoords;
+varying vec3 ex_Normal;
+varying vec3 ex_FragPos;
+
+void main()
+{
+ gl_Position = u_Projection * u_View * u_Model * vec4(in_Position, 1.0);
+ ex_TexCoords = in_TexCoords;
+ ex_Normal = vec3(u_Model * vec4(in_Normal, 0));
+ ex_FragPos = vec3(u_Model * vec4(in_Position, 1));
+}

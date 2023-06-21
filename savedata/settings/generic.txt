@@ -1,0 +1,5 @@
+# settings file
+
+#gamespeed | Float | 0.5
+#textcolour | Vec3 | 1, 0.0, 0.0
+#textbackground | Vec4 | 0.5, 0.5, 0.5, 0.4

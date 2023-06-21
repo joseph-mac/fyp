@@ -1,0 +1,51 @@
+#version 410
+#define MAX_LIGHT_COUNT 5
+
+uniform sampler2D u_Texture;
+
+uniform int u_LightCount;
+uniform vec3 u_LightPositions[MAX_LIGHT_COUNT];
+uniform vec3 u_LightColours[MAX_LIGHT_COUNT];
+uniform vec3 u_LightDistances[MAX_LIGHT_COUNT];
+
+uniform mat4 u_View;
+
+varying vec2 ex_TexCoords;
+varying vec3 ex_Normal;
+varying vec3 ex_FragPos;
+
+void main()
+{
+ vec3 norm = normalize(ex_Normal);
+ vec3 lightPos;
+ vec3 lightColour = vec3(1, 1, 1);
+ vec3 lightDistances;
+ 
+ float ambientStrength = 0.1;
+ vec3 ambientLight = ambientStrength * lightColour;
+
+ vec3 totalLight = ambientLight;
+ for(int i = 0; i < u_LightCount; i++)
+ {
+  lightPos = u_LightPositions[i];
+  lightColour = u_LightColours[i];
+  lightDistances = u_LightDistances[i];
+
+  vec3 lightDir = normalize(lightPos - ex_FragPos);
+  float diff = max(dot(norm, lightDir), 0);
+  float dist = length(lightPos - ex_FragPos);
+  float distVal = 1.0 / (lightDistances.x + lightDistances.y * dist + lightDistances.z * (dist * dist));
+  vec3 diffuseLight = lightColour * diff * distVal;
+
+  vec3 viewPos = vec3(inverse(u_View) * vec4(0, 0, 0, 1));
+  vec3 viewDir = normalize(viewPos - ex_FragPos);
+  vec3 reflectDir = reflect(-lightDir, norm);
+  float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+  vec3 specularLight = lightColour * spec * distVal;
+
+  totalLight = totalLight + diffuseLight + specularLight;
+ }
+
+ vec4 texture = texture2D(u_Texture, ex_TexCoords);
+ gl_FragColor = vec4(totalLight, 1.0) * texture;
+}

@@ -1,0 +1,38 @@
+# GENERAL
+menuCamera | TRA * 50, 15, 30 * 0, 45, 0 * 1, 1, 1 * true | CAM_PERSP * -1 * -1 * 600 * 45 |
+gameCamera | TRA * 00.0, 25.0, 45.0 * -20.0, 00.0, 00.0 * 01.0, 01.0, 01.0 * true | VIS * box * ../../data/textures/black.bmp * textured-unlit | CAM_PERSP * -1 * -1 * 600 * 45 |
+sun | TRA * 0, 75, 0 * -70, 25, 0 * 1, 1, 1 * true | VIS * box * ../../data/textures/camera.png * textured-unlit | CAM_ORTHO * 1800 * 1800 * 200 * 8 | LIT_SUN * 0.3, 0.3, 0.3 |
+sunScreen | GUI * 0, 0, 9 * 0, 0, 0 * 20, 20, 1 * 0, 0 * 2, 0 | VIS * plane_vertical * sun * textured-unlit |
+
+#orb_light | TRA * -25, 25, -10 * 0, 0, 0 * 1, 1, 1 * true | VIS * box * ../../data/textures/red.bmp * colour-unlit | LIT_ORB * 0.5, 0.5, 0.8 |
+#cat | TRA * -25, 5, -10 * 0, 0, 0 * 2, 2, 2 * true | VIS * ../../data/models/curuthers/curuthers.obj * ../../data/models/curuthers/Whiskers_diffuse.png * textured-full-lit * true | SPI * 60|
+#rat | TRA * 20, 18, -10 * 0, 0, 0 * 2, 2, 2 * true | VIS * ../../data/models/rat/rat.obj * ../../data/textures/brown.png * textured-full-lit | SPI * 90 |
+
+# GAME
+road | TRA * 00.0, 00.0, -175.0 * 00.0, 00.0, 00.0 * 40.0, 01.0, 400.0 * true | VIS * plane * ../../data/textures/aqua-alpha40.png * textured-full-lit | COL_PLA * 0, 1, 0 |
+roadEnd * road | TRA * 0, 0, -0.75 * 0, 0, 0 * 1, 1, 0.5 * true | VIS * plane * ../../data/textures/aqua-alpha40-fade.png * textured-full-lit |
+barrierL | TRA * 20, 0, 0 * 0, 0, 0 * 1, 1, 1 * true | COL_PLA * -1, 0, 0 |
+barrierR | TRA * -20, 0, 0 * 0, 0, 0 * 1, 1, 1 * true | COL_PLA * 1, 0, 0 |
+spawner | TRA * 0, 2.5, -100 * 0, 0, 0 * 1, 1, 1 * true | SPW * 1 * 3 |
+
+player | TRA * 0, 2, 10 * 0, 0, 0 * 1, 1, 1 * true | VIS * box * ../../data/textures/red.png * textured-full-lit | PLAYER | DYN * 0 * 1 * 1 * 0, 0, 0 | COL_SPH * 1.0 * 0.9 | AUD * ../../data/audio/playerHit.ogg * 1 * 1 | AUD * ../../data/audio/fleetHit.ogg * 1 * 1 | AUD * ../../data/audio/playerBang.ogg * 1 * 1 | AUD * ../../data/audio/shoot.ogg * 1 * 1 |
+shipLightL * player | TRA * -0.5, 0, 0 * 0, 0, 0 * 0.5, 0.5, 0.5 * true | VIS * box * ../../data/textures/red.bmp * colour-unlit | LIT_ORB * 0.6, 0.2, 0.2 |
+shipLightR * player | TRA * 0.5, 0, 0 * 0, 0, 0 * 0.5, 0.5, 0.5 * true | VIS * box * ../../data/textures/red.bmp * colour-unlit | LIT_ORB * 0.6, 0.2, 0.2 |
+fleet | TRA * 0, 2.5, 80 * 0, 0, 0 * 40, 5, 100 * true | VIS * box * ../../data/textures/black.bmp * textured-full-lit |
+
+controller | GAMECONTROLLER | AUD * ../../data/audio/enemyBang.ogg * 1 * 1 |
+
+# SKYBOX
+skybox | VIS * skybox * ../../data/textures/skybox-space/?.png * skybox |
+
+# GUI
+titleBackground * ~mainMenuUI * ~GUI | GUI * 0, 0, 8 * 0, 0, 0 * 600, 350, 1 * 1, 2 * 1, 2 | VIS * plane_vertical * ../../data/textures/road.png * textured-unlit |
+title * titleBackground * ~mainMenuUI * ~GUI | GUI * 0, 0, 1 * 0, 0, 0 * 600, 350, 1 * 1, 1 * 1, 1 | VIS * plane_vertical * ../../data/textures/pixel-ascii.png * text | TXT * "SPACE GAME" * 70 * 1, 0 * 1, 1, 1 * 0, 0, 0, 0 |
+startBackground * ~mainMenuUI * ~GUI | GUI * 0, 0, 8 * 0, 0, 0 * 1000, 200, 1 * 1, 0 * 1, 0 | VIS * plane_vertical * ../../data/textures/road.png * textured-unlit |
+start * ~mainMenuUI * ~GUI | GUI * 0, 0, 9 * 0, 0, 0 * 1000, 500, 1 * 1, 0 * 1, 0 | VIS * plane_vertical * ../../data/textures/pixel-ascii.png * text | TXT * "PRESS TO START" * 50 * 1, 0 * 1, 1, 1 * 0, 0, 0, 0 |
+
+healthContainer * ~gameUI * ~GUI | GUI * 50, 50, 5 * 0, 0, 0 * 450, 150, 1 * 0, 0 * 0, 0 | VIS * plane_vertical * ../../data/textures/road.png * textured-unlit |
+healthLabel * healthContainer * ~gameUI * ~GUI | GUI * 20, 0, 1 * 0, 0, 0 * 400, 80, 1 * 0, 2 * 0, 2 | VIS * plane_vertical * ../../data/textures/pixel-ascii.png * text | TXT * "SHIP:" * 40 * 0, 2 * 1, 1, 1 * 0, 0, 0, 0 |
+health * healthContainer * ~gameUI * ~GUI | GUI * -20, 0, 1 * 0, 0, 0 * 200, 80, 1 * 2, 2 * 2, 2 | VIS * plane_vertical * ../../data/textures/pixel-ascii.png * text | TXT * "10" * 40 * 2, 2 * 1, 1, 1 * 0, 0, 0, 0 |
+fleetHealthLabel * healthContainer * ~gameUI * ~GUI | GUI * 20, 0, 1 * 0, 0, 0 * 400, 80, 1 * 0, 0 * 0, 0 | VIS * plane_vertical * ../../data/textures/pixel-ascii.png * text | TXT * "FLEET:" * 40 * 0, 0 * 1, 1, 1 * 0, 0, 0, 0 |
+fleetHealth * healthContainer * ~gameUI * ~GUI | GUI * -20, 0, 1 * 0, 0, 0 * 200, 80, 1 * 2, 0 * 2, 0 | VIS * plane_vertical * ../../data/textures/pixel-ascii.png * text | TXT * "5" * 40 * 2, 0 * 1, 1, 1 * 0, 0, 0, 0 |
